@@ -286,16 +286,6 @@ consolewrite(struct inode *ip, char *buf, int n)
 }
 
 void
-vgainit(void)
-{
-  char *VGA = (char *) 0xB8000;
-  int x = 0;
-  int y = 0;
-  int offset = 80*y + x;
-  VGA[offset] = (char) 0x0754;
-}
-
-void
 consoleinit(void)
 {
   initlock(&cons.lock, "console");
