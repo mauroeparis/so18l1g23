@@ -18,6 +18,7 @@ int
 main(void)
 {
   kinit1(end, P2V(4*1024*1024)); // phys page allocator
+  vgainit();
   kvmalloc();      // kernel page table
   mpinit();        // detect other processors
   lapicinit();     // interrupt controller
@@ -30,7 +31,7 @@ main(void)
   tvinit();        // trap vectors
   binit();         // buffer cache
   fileinit();      // file table
-  ideinit();       // disk 
+  ideinit();       // disk
   startothers();   // start other processors
   kinit2(P2V(4*1024*1024), P2V(PHYSTOP)); // must come after startothers()
   userinit();      // first user process
@@ -113,4 +114,3 @@ pde_t entrypgdir[NPDENTRIES] = {
 // Blank page.
 //PAGEBREAK!
 // Blank page.
-
