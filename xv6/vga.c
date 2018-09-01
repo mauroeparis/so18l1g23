@@ -25,8 +25,9 @@ vgainit(void)
   char *VGA = (char *) DIR;
   int offset;
   int y = 24; // Footer
+  int x;
 
-  for (int x = 0; x < len; x++)
+  for (x = 0; x < len; x++)
   {
     offset = (80 * y) + x;
     VGA[offset*2+1] = (char) (0x5F); //Color: b pink, f white
