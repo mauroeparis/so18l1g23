@@ -7,30 +7,21 @@
 #include "x86.h"
 #include "elf.h"
 
-#define DIR 0xB8000
-#define COLOR 0x700
-#define BLINK 0x8000
-
-struct {
-  char color;
-  int length;
-} string;
+#define DIR       0xB8000
+#define COLOR     (0x5F << 8) // Color: 5 Pink, F White
 
 void
 vgainit(void)
 {
-  char *SO2018 = "Aguante SO2018!";
-  int len = 15;
+  uchar SO2018[] = "Aguante SO2018!";
+  int len = sizeof(SO2018);
 
-  char *VGA = (char *) DIR;
+  ushort *VGAs = (ushort *) DIR;
   int offset;
-  int y = 24; // Footer
+  int x, y = 24; // 24 = last line
 
-  for (int x = 0; x < len; x++)
-  {
+  for (x = 0; x < len; x++){
     offset = (80 * y) + x;
-    VGA[offset*2+1] = (char) (0x5F); //Color: b pink, f white
-    VGA[offset*2] = (char) (SO2018[x]); // Text
+    VGAs[offset] = (ushort) (COLOR + SO2018[x]);
   }
-
 }

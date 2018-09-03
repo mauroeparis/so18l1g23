@@ -295,5 +295,4 @@ consoleinit(void)
   cons.locking = 1;
 
   ioapicenable(IRQ_KBD, 0);
-
 }
