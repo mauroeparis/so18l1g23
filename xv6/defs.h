@@ -11,8 +11,7 @@ struct stat;
 struct superblock;
 
 // vga.c
-void            vgainit(void);
-void            mode_13H(void);
+void            vgainit(int mode);
 
 // bio.c
 void            binit(void);
@@ -25,7 +24,6 @@ void            consoleinit(void);
 void            cprintf(char*, ...);
 void            consoleintr(int(*)(void));
 void            panic(char*) __attribute__((noreturn));
-void            vgainit(void);
 
 // exec.c
 int             exec(char*, char**);
