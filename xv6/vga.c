@@ -160,4 +160,21 @@ mode_13H (void)
   outb(0x3C0, 20);
   outb(0x3C0, 0x00);
 
+  // Enable screen
+  inb(0x3DA);
+  outb(0x3C0, 0x20);
+
+  uchar *VGAs = P2V((uchar *) 0xA0000);
+  int i, j;
+  for (j = 0; j < 320; j++) {
+    for(i = 0; i < 200; i++) {
+      VGAs[j + 320*i] = 0x0D;
+    }
+  }
+}
+
+void
+mode_3H(void)
+{
+  
 }
