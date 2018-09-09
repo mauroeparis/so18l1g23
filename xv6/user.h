@@ -23,6 +23,8 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+int plotpixel(int, int, int);
+
 
 // ulib.c
 int stat(char*, struct stat*);

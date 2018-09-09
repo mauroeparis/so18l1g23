@@ -89,3 +89,16 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+int
+sys_plotpixel(void)
+{
+  int x, y, c;
+
+  if(argint(0, &x) < 0 || argint(1, &y) < 0 || argint(2, &c) < 0)
+    return -1;
+
+  uchar *VGA = (uchar*) P2V(0xA0000);
+  VGA[x + y*320] = c;
+  return 0;
+}
