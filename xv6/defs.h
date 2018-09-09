@@ -11,7 +11,7 @@ struct stat;
 struct superblock;
 
 // vga.c
-void            vgainit(void);
+void            vgainit(int mode);
 void            mode_13H(void);
 void            mode_3H(void);
 

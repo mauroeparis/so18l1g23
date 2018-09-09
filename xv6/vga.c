@@ -6,6 +6,7 @@
 #include "defs.h"
 #include "x86.h"
 #include "vga.h"
+#include "memlayout.h"
 
 #define DIR             0x000B8000
 
@@ -14,6 +15,8 @@ vgainit(int mode)
 {
   if(mode){
     mode_13H();
+  } else {
+    mode_3H();
   }
 }
 
@@ -170,7 +173,7 @@ mode_13H(void)
   }
 
   // Clean screeen
-  uchar *VGA = (uchar*) 0xA0000;
+  uchar *VGA = (uchar*) P2V(0xA0000);
   for (int i = 0; i < 320 * 200; i++){
     VGA[i] = 0x0;
   }
