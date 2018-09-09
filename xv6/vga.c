@@ -7,7 +7,7 @@
 #include "x86.h"
 #include "vga.h"
 
-#define DIR             0x000B8000 
+#define DIR             0x000B8000
 
 void
 vgainit(int mode)
@@ -153,7 +153,6 @@ mode_13H(void)
   outb(0x3C0, 20);
   outb(0x3C0, 0x00);
 
-<<<<<<< HEAD
   // 3daH  Feature Control Register (CGA)
   inb(0x3DA);
 
@@ -175,26 +174,14 @@ mode_13H(void)
   for (int i = 0; i < 320 * 200; i++){
     VGA[i] = 0x0;
   }
-=======
-  // Enable screen
-  inb(0x3DA);
-  outb(0x3C0, 0x20);
-
-  uchar *VGAs = P2V((uchar *) 0xA0000);
-  int i, j;
-  for (j = 0; j < 320; j++) {
-    for(i = 0; i < 200; i++) {
-      VGAs[j + 320*i] = 0x0D;
-    }
-  }
 }
 
 void
 mode_3H(void)
 {
-  
->>>>>>> b6b05128c29be7cd1365fa1ded792642c43524a1
+
 }
+
 
 void
 salute(void)
