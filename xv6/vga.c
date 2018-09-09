@@ -18,9 +18,11 @@ vgainit(void)
 
   ushort *VGAs = (ushort *) DIR;
   int offset;
-  int x, y = 24; // 24 = last line
+  int y = 24; // Footer
+  int x;
 
-  for (x = 0; x < len; x++){
+  for (x = 0; x < len; x++)
+  {
     offset = (80 * y) + x;
     VGAs[offset] = (ushort) (COLOR + SO2018[x]);
   }
@@ -176,5 +178,5 @@ mode_13H (void)
 void
 mode_3H(void)
 {
-  
+
 }
