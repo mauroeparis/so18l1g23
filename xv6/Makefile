@@ -25,7 +25,6 @@ OBJS = \
 	trapasm.o\
 	trap.o\
 	uart.o\
-	vga.o\
 	vectors.o\
 	vm.o\
 
