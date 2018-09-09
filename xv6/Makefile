@@ -31,7 +31,7 @@ OBJS = \
 
 # Cross-compiling (e.g., on Mac OS X)
 # TOOLPREFIX = i386-jos-elf
-# TOOLPREFIX = i386-elf-
+TOOLPREFIX = i386-elf-
 
 # Using native tools (e.g., on X86 Linux)
 #TOOLPREFIX =
@@ -176,7 +176,11 @@ UPROGS=\
 	_usertests\
 	_wc\
 	_zombie\
+<<<<<<< HEAD
 	_testplot\
+=======
+	_modeswitch\
+>>>>>>> b6b05128c29be7cd1365fa1ded792642c43524a1
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -247,7 +251,11 @@ EXTRA=\
 	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
 	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c\
 	printf.c umalloc.c\
+<<<<<<< HEAD
 	testplot.c\
+=======
+	modeswitch.c\
+>>>>>>> b6b05128c29be7cd1365fa1ded792642c43524a1
 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\
 

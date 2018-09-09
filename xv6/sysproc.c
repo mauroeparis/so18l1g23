@@ -102,3 +102,19 @@ sys_plotpixel(void)
   VGA[x + y*320] = c;
   return 0;
 }
+
+// Modes: {1: Graphic, 0: Text}
+int
+sys_modeswitch(void)
+{
+  int n;
+  if(argint(0, &n) < 0)
+    return -1;
+
+  if(n)
+    mode_13H();
+  else
+    mode_3H();
+
+  return 0;
+}

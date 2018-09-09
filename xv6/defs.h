@@ -11,7 +11,13 @@ struct stat;
 struct superblock;
 
 // vga.c
+<<<<<<< HEAD
 void            vgainit(int mode);
+=======
+void            vgainit(void);
+void            mode_13H(void);
+void            mode_3H(void);
+>>>>>>> b6b05128c29be7cd1365fa1ded792642c43524a1
 
 // bio.c
 void            binit(void);

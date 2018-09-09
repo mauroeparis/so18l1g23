@@ -24,7 +24,7 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 int plotpixel(int, int, int);
-
+int modeswitch(int);
 
 // ulib.c
 int stat(char*, struct stat*);
