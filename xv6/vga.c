@@ -1,40 +1,34 @@
+// VGA control
+// http://www.techhelpmanual.com/900-video_graphics_array_i_o_ports.html
+// https://files.osdev.org/mirrors/geezer/osd/graphics/modes.c
+
 #include "types.h"
-#include "param.h"
-#include "memlayout.h"
-#include "mmu.h"
-#include "proc.h"
 #include "defs.h"
 #include "x86.h"
-#include "elf.h"
+#include "vga.h"
+#include "memlayout.h"
 
-#define DIR       0xB8000
-#define COLOR     (0x5F << 8) // Color: 5 Pink, F White
+#define DIR             0x000B8000
 
 void
-vgainit(void)
+vgainit(int mode)
 {
-  uchar SO2018[] = "Aguante SO2018!";
-  int len = sizeof(SO2018);
-
-  ushort *VGAs = (ushort *) DIR;
-  int offset;
-  int y = 24; // Footer
-  int x;
-
-  for (x = 0; x < len; x++)
-  {
-    offset = (80 * y) + x;
-    VGAs[offset] = (ushort) (COLOR + SO2018[x]);
+  if(mode){
+    mode_13H();
+  } else {
+    mode_3H();
   }
 }
 
+// Switch to graphic mode
+// SRC: g_320x200x256[] from osdev
 void
-mode_13H (void)
+mode_13H(void)
 {
-  /* MISC 0x3C2 */
+  // 3c2H  Miscellaneous Output Register
   outb(0x3C2, 0x63);
 
-  /* SEQ 0x3C4 - 0x3C5 */
+  // 3c4H  Sequencer Address Register
   outb(0x3C4, 0);
   outb(0x3C5, 0x03);
   outb(0x3C4, 1);
@@ -46,7 +40,7 @@ mode_13H (void)
   outb(0x3C4, 4);
   outb(0x3C5, 0x0E);
 
-  /* CRTC 0x3D4 - 0x3D5*/
+  // 3d4H  CRT controller address (CGA)
   outb(0x3D4, 0);
   outb(0x3D5, 0x5F);
   outb(0x3D4, 1);
@@ -98,7 +92,7 @@ mode_13H (void)
   outb(0x3D4, 24);
   outb(0x3D5, 0xFF);
 
-  /* GC 0x3CE - 0x3CF*/
+  // 3ceH Graphics Address Register
   outb(0x3CE, 0);
   outb(0x3CF, 0x00);
   outb(0x3CE, 1);
@@ -118,7 +112,7 @@ mode_13H (void)
   outb(0x3CE, 8);
   outb(0x3CF, 0xFF);
 
-  /* AC 0x3C0 */
+  // 3c0H  Attribute Address Register
   outb(0x3C0, 0);
   outb(0x3C0, 0x00);
   outb(0x3C0, 1);
@@ -162,16 +156,26 @@ mode_13H (void)
   outb(0x3C0, 20);
   outb(0x3C0, 0x00);
 
-  // Enable screen
+  // 3daH  Feature Control Register (CGA)
   inb(0x3DA);
+
+  // Enable screen
   outb(0x3C0, 0x20);
 
-  uchar *VGAs = P2V((uchar *) 0xA0000);
-  int i, j;
-  for (j = 0; j < 320; j++) {
-    for(i = 0; i < 200; i++) {
-      VGAs[j + 320*i] = 0x0D;
-    }
+  // Load 256 color palette
+  int i, value;
+  for(i = 0; i < 256; i++){
+    value = vga_pal[i];
+    outb(0x3C8, i);
+    outb(0x3C9, (value>>18)&0x3f);
+    outb(0x3C9, (value>>10)&0x3f);
+    outb(0x3C9, (value>>2)&0x3f);
+  }
+
+  // Clean screeen
+  uchar *VGA = (uchar*) P2V(0xA0000);
+  for (int i = 0; i < 320 * 200; i++){
+    VGA[i] = 0x0;
   }
 }
 
@@ -179,4 +183,21 @@ void
 mode_3H(void)
 {
 
+}
+
+
+void
+salute(void)
+{
+  uchar SO2018[] = "Aguante SO2018!";
+  int len = sizeof(SO2018);
+
+  ushort *VGA = (ushort *) DIR;
+  int offset;
+  int x, y = 24; // 24 = last line
+
+  for (x = 0; x < len; x++){
+    offset = (80 * y) + x;
+    VGA[offset] = (ushort) (COLOR + SO2018[x]);
+  }
 }
