@@ -9,6 +9,9 @@ main(int argc, char *argv[])
     printf(2, "Usage: modeswitch 1|0 \n");
     exit();
   }
-  modeswitch(1);
+  if (strcmp(argv[1], "1")) // '==' cant be used, use strcmp() instead
+    modeswitch(1);
+  else
+    modeswitch(0);
   exit();
 }
