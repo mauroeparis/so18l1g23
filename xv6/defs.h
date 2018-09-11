@@ -172,6 +172,7 @@ void            uartputc(int);
 
 // vga.c
 void            vgainit(int mode);
+void            set_palette(void);
 
 // vm.c
 void            seginit(void);

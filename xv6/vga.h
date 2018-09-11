@@ -14,6 +14,7 @@
 void            salute(void);
 void            mode_13H(void);
 void            mode_3H(void);
+//void            set_palette(void);
 
 // 256 color palette, 0xRRGGBB format. Needs shifting to convert to 6 bits.
 int vga_pal[256] =

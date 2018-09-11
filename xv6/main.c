@@ -18,6 +18,7 @@ int
 main(void)
 {
   //mode_13H();
+  vgainit(0);
   kinit1(end, P2V(4*1024*1024)); // phys page allocator
   kvmalloc();      // kernel page table
   mpinit();        // detect other processors
