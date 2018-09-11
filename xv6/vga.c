@@ -9,7 +9,8 @@
 #include "memlayout.h"
 
 void
-vgainit(int mode){
+vgainit(int mode)
+{
   set_palette();
   if(mode)
     mode_13H();
@@ -385,13 +386,12 @@ mode_3H(void)
 
   // Enable screen
   outb(0x3C0, 0x20);
-
 }
 
 void
 salute(void)
 {
-  uchar SO2018[] = "Aguante SO2018!";
+  uchar SO2018[] = "Aguante SO2018";
   int len = sizeof(SO2018);
 
   ushort *VGA = (ushort *) P2V(0xB8000);
@@ -399,8 +399,8 @@ salute(void)
   int x, y = 24; // 24 = last line
 
   for (x = 0; x < len; x++){
-    offset = (80 * y) + x;
-    VGA[offset] = (ushort) (COLOR + SO2018[x]);
+    offset = (80 * y) + x + (40-len/2);
+    VGA[offset] = (ushort) (COLOR(x) + SO2018[x]);
   }
 }
 
