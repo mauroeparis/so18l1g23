@@ -9,12 +9,13 @@
 #include "memlayout.h"
 
 void
-vgainit(int mode)
-{
-  if(mode){
+vgainit(int mode){
+  set_palette();
+  if(mode)
     mode_13H();
-  } else {
+  else{
     mode_3H();
+    salute();
   }
 }
 
@@ -162,23 +163,11 @@ mode_13H(void)
   // Enable screen
   outb(0x3C0, 0x20);
 
-  /* Pallet loading */
-  
-  // Load 256 color palette
-  int i, value;
-  for(i = 0; i < 256; i++){
-    value = vga_pal[i];
-    outb(0x3C8, i);
-    outb(0x3C9, (value>>18)&0x3f);
-    outb(0x3C9, (value>>10)&0x3f);
-    outb(0x3C9, (value>>2)&0x3f);
-  }
-
-  // Clean screeen
+  // Clean screen
+  int i;
   uchar *VGA = (uchar*) P2V(0xA0000);
-  for (i = 0; i < 320 * 200; i++){
+  for (i = 0; i < 320 * 200; i++)
     VGA[i] = 0x00;
-  }
 }
 
 // Switch to text mode
@@ -387,6 +376,9 @@ mode_3H(void)
   outb(0x3CF, 0x0E);
 
   // TODO: Correct the color of the font
+  for (int i = 0; i < 80*25; i++) {
+    ((ushort *) P2V(0xB8000))[i] = 0x00;
+  }
 
   // 3daH  Feature Control Register (CGA)
   inb(0x3DA);
@@ -409,5 +401,19 @@ salute(void)
   for (x = 0; x < len; x++){
     offset = (80 * y) + x;
     VGA[offset] = (ushort) (COLOR + SO2018[x]);
+  }
+}
+
+void
+set_palette(void)
+{
+  // Load 256 color palette
+  int i, value;
+  for(i = 0; i < 256; i++){
+    value = vga_pal[i];
+    outb(0x3C8, i);
+    outb(0x3C9, (value>>18)&0x3f);
+    outb(0x3C9, (value>>10)&0x3f);
+    outb(0x3C9, (value>>2)&0x3f);
   }
 }
