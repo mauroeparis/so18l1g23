@@ -110,11 +110,6 @@ sys_modeswitch(void)
   int n;
   if(argint(0, &n) < 0)
     return -1;
-
-  if(n)
-    mode_13H();
-  else
-    mode_3H();
-
+  vgainit(n);
   return 0;
 }

@@ -10,11 +10,6 @@ struct sleeplock;
 struct stat;
 struct superblock;
 
-// vga.c
-void            vgainit(int mode);
-void            mode_13H(void);
-void            mode_3H(void);
-
 // bio.c
 void            binit(void);
 struct buf*     bread(uint, uint);
@@ -174,6 +169,9 @@ extern struct spinlock tickslock;
 void            uartinit(void);
 void            uartintr(void);
 void            uartputc(int);
+
+// vga.c
+void            vgainit(int mode);
 
 // vm.c
 void            seginit(void);
