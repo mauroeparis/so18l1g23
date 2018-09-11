@@ -175,7 +175,7 @@ mode_13H(void)
   // Clean screeen
   uchar *VGA = (uchar*) P2V(0xA0000);
   for (i = 0; i < 320 * 200; i++){
-    VGA[i] = 0x0;
+    VGA[i] = 0x03;
   }
 }
 
@@ -311,7 +311,7 @@ mode_3H(void)
   outb(0x3C0, 18);
   outb(0x3C0, 0x0F);
   outb(0x3C0, 19);
-  outb(0x3C0, 0x00);
+  outb(0x3C0, 0x08);
   outb(0x3C0, 20);
   outb(0x3C0, 0x00);
 
@@ -320,7 +320,6 @@ mode_3H(void)
 
   // Enable screen
   outb(0x3C0, 0x20);
-
 }
 
 
