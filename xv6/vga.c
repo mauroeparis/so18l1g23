@@ -8,8 +8,6 @@
 #include "vga.h"
 #include "memlayout.h"
 
-#define DIR             0x000B8000
-
 void
 vgainit(int mode)
 {
@@ -25,6 +23,8 @@ vgainit(int mode)
 void
 mode_13H(void)
 {
+  /* Text mode initialization */
+
   // 3c2H  Miscellaneous Output Register
   outb(0x3C2, 0x63);
 
@@ -162,6 +162,8 @@ mode_13H(void)
   // Enable screen
   outb(0x3C0, 0x20);
 
+  /* Pallet loading */
+  
   // Load 256 color palette
   int i, value;
   for(i = 0; i < 256; i++){
@@ -175,7 +177,7 @@ mode_13H(void)
   // Clean screeen
   uchar *VGA = (uchar*) P2V(0xA0000);
   for (i = 0; i < 320 * 200; i++){
-    VGA[i] = 0x03;
+    VGA[i] = 0x00;
   }
 }
 
@@ -184,6 +186,8 @@ mode_13H(void)
 void
 mode_3H(void)
 {
+  /* Text mode initialization */
+
   // 3c2H  Miscellaneous Output Register
   outb(0x3C2, 0x67);
 
@@ -315,13 +319,82 @@ mode_3H(void)
   outb(0x3C0, 20);
   outb(0x3C0, 0x00);
 
+  /* Font recovering */
+
+  // seq reset
+  outb(0x3C4, 0);
+  outb(0x3C5, 0x01);
+  // image plane 2
+  outb(0x3C4, 2);
+  outb(0x3C5, 0x04);
+  // disable odd/even in sequencer
+  outb(0x3C4, 4);
+  outb(0x3C5, 0x07);
+  // seq reset
+  outb(0x3C4, 0);
+  outb(0x3C5, 0x03);
+
+  // read select plane 2
+  outb(0x3CE, 4);
+  outb(0x3CF, 0x02);
+  // odd/even disabled
+  outb(0x3CE, 5);
+  outb(0x3CF, 0x00);
+  // memory map select A0000h-BFFFFh
+  outb(0x3CE, 6);
+  outb(0x3CF, 0x00);
+
+  int offset, i, j;
+  uchar *VGA = (uchar*) P2V(0xA0000);
+
+  for(i = 0; i < 4096; i += 16) {
+    for(j = 0; j < 16; j++) {
+      offset = (2 * i) + j;
+      VGA[offset] = g_8x16_font[i+j];
+    }
+  }
+
+  // seq reset
+  outb(0x3C4, 0);
+  outb(0x3C5, 0x01);
+  // image plane 0 and 1
+  outb(0x3C4, 2);
+  outb(0x3C5, 0x03);
+  // character sets 0
+  outb(0x3C4, 3);
+  outb(0x3C5, 0x00);
+  // plain 64 kb memory layout, with odd/even for text
+  outb(0x3C4, 4);
+  outb(0x3C5, 0x02);
+  // seq reset
+  outb(0x3C4, 0);
+  outb(0x3C5, 0x03);
+
+  // no color compare
+  outb(0x3CE, 2);
+  outb(0x3CF, 0x00);
+  // no rotate
+  outb(0x3CE, 3);
+  outb(0x3CF, 0x00);
+  // read select plane 0
+  outb(0x3CE, 4);
+  outb(0x3CF, 0x00);
+  // odd/even enable
+  outb(0x3CE, 5);
+  outb(0x3CF, 0x10);
+  // memory map select: 0xb8000
+  outb(0x3CE, 6);
+  outb(0x3CF, 0x0E);
+
+  // TODO: Correct the color of the font
+
   // 3daH  Feature Control Register (CGA)
   inb(0x3DA);
 
   // Enable screen
   outb(0x3C0, 0x20);
-}
 
+}
 
 void
 salute(void)
@@ -329,7 +402,7 @@ salute(void)
   uchar SO2018[] = "Aguante SO2018!";
   int len = sizeof(SO2018);
 
-  ushort *VGA = (ushort *) DIR;
+  ushort *VGA = (ushort *) P2V(0xB8000);
   int offset;
   int x, y = 24; // 24 = last line
 
